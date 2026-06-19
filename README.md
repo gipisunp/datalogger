@@ -1,4 +1,4 @@
-# DATALOGGER GIPIS 
+# **DATALOGGER GIPIS** 
 
 > **BASADO EN EL MODULO HELTEC LORA V4 ESP32**
 
@@ -10,40 +10,35 @@
 * I2C.
 
 
-**CANALES ANALOGICOS** 
+# CANALES ANALOGICOS 
 Se manejan mediante el CI MCP3208. El mismo cuenta internamente con un multiplexor analógico y un ADC, los cuales se manejan mediante comandos SPI. 
 
                DIAGRAMA DE BLOQUES INTERNO DEL MCP3208
                =======================================
 
-      +-------------------------------------------------------------+
+               ┌────────────────────────────────────────┐
+               │         DIAGRAMA DE BLOQUES            │
+               │               MCP3208                  │
+               └────────────────────────────────────────┘
 
-      |  MCP3208 (ADC de 12-bits con MUX de 8 canales)              |
-      |                                                             |
- CH0 -|--> [ M ]                                                    |
- CH1 -|--> [ U ]                                                    |
- CH2 -|--> [ X ]                                                    |
- CH3 -|--> [   ] --(Selección)--> [ SUESTREO / ]                    |
- CH4 -|--> [ D ]                  [ RETENCIÓN  ]                    |
- CH5 -|--> [ E ] (Single/Diff)          |                           |
- CH6 -|--> [ 8 ]                        v                           |
- CH7 -|--> [CH ]                  [ COMPARTIMENTO ]                 |
+    ENTRADAS ANALÓGICAS                                  SEÑALES SPI
+   ┌──────────────────┐                              ┌─────────────────┐
+   │ CH0 ────────┐    │                              │     ┌─────────┐ │
+   │ CH1 ──────┐ │    │    ┌────────────────┐        │ DIN ┤   REG.  ├─┼──> DIN
+   │ CH2 ────┐ │ │    │    │  SAMP / HOLD   │        │     │ CONTROL │ │
+   │ CH3 ──┐ │ │ │ ┌──┴────┴──┐        ┌────┴─────┐  │     └────┬────┘ │
+   │ CH4 ──┼─┼─┼─┼─┤ MULTIPLEXOR ├───────>┤   ADC    ├───┼──────────┼────┼──> DOUT
+   │ CH5 ──┼─┼─┼─┘ │  8 CANALES   │        │  12-BIT  │  │     ┌────┴────┐ │
+   │ CH6 ──┼─┼─┘   └──────────────┘        └────┬─────┘  │CLK ─┤ INTERFAZ├─┼──> CLK
+   │ CH7 ──┼─┘                                  ^        │     │   SPI   │ │
+   └───────┼────────────────────────────────────┼────────┤CS ──┤         ├─┼──> CS/SHDN
+           │                                    │        │     └─────────┘ │
+           └────────────────────────────────────┼────────┴─────────────────┘
+                                                │
+                                                ├──> VREF (Referencia)
+                                                ├──> VDD / DGND (Digital VCC/GND)
+                                                └──> AGND (Analógico GND)
 
-      |                             [   DAC/SAR   ]                 |
-      |                                 |                           |
-      |  +------------------------------+                           |
-      |  |                                                          |
-      |  v                                                          |
-      | [ LÓGICA DE CONTROL ] <====================> [ INTERFAZ ]---|--> DIN
-      | [  Y REGISTROS ESC   ]                        [   SPI    ]---|--> DOUT
-      |                                               [ INTERNA  ]---|--> CLK
-      |                                                    ^        |---|--> CS/SHDN
-      |                                                    |        |
-      | VREF ----------------------------------------------+        |
-      | VDD  -------------------------------------------------------|
-      | DGND -------------------------------------------------------|
-      | AGND -------------------------------------------------------|
-      +-------------------------------------------------------------+
 
 
 
