@@ -33,6 +33,7 @@ SPI. Esto trae distintas estrategias y particularidades de diseño, con sus resp
     * **Desventajas**: Mayor consumo de pines. 
 
 **Canal 485**
+    
 El estandar 485 maneja el bus de datos en un par de cables diferencial (A+ y B-). Todos los sensores se cuelgan en paralelo a este mismo bus y lo escuchan al mismo tiempo. Cada sensor se identifica y reconoce por su ID Header único, adoptado por el estándar de fabricante. 
 
 Por ej: El ID de cabecera de trama para equipos que utilizan MODBUS RTU es un identificador de 1 byte, el cual puede asignarse a cada equipo por Dip-switches/selectores fisicos, pantalla-teclado integrados o por software del fabricante enviando un comando Modbus temporal al ID por defecto de fábrica (que suele ser el 1). Por otro lado, la trama de datos del OCR-507 de Satlantic se identifica por cadena ASCII "SAT", seguidas del tipo de sensor y luego del número de serie del equipo.  
@@ -47,10 +48,17 @@ El 3485 requiere nativamente de pinesde control RE/DE adicionales, los cuales le
 
 En ultima instancia, estos pines RE/DE suelen puentearse externamente a un solo GPIO del uC. Por ejemplo si el uC pone en alto su GPIO tanto RE como DE se ponene en alto y el datalogger toma control del bus, y viceversa para un bajo en el GPIO.  
 
-**No se recomienda un modulo basado en el chip MAX485** ya que este no está pensado para manejar tensiones 3,3V sino de 5V. 
+Dicho todo esto, el bus de datos A+/B- con los equipos RS485 se conectar a la bornera de entrada del modulo conversor, del cual salen las lineas TX y RX listas para conectar al uC Heltec. 
+
+> 1. TX: Transmición de datos. 
+> 2. RX: Recepción de datos.
+> 3. RE/DE: OPCIONAL. Línea de control de bus, si bien son dos pines físicos que salen del modulo conversor, gasta solo 1 pin pq están puenteados al uC.
 
   * Con Módulo Reciente: **2 pines**.
   * Con Módulo Anterior: **3 pines**.
+
+**No se recomienda un modulo basado en el chip MAX485 ni el SN75176** ya que este no están pensados para manejar tensiones 3,3V sino de 5V. 
+
 
 **Canal 232**
   * Compartido: **4 pines**.
