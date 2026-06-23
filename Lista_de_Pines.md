@@ -34,7 +34,7 @@ SPI. Esto trae distintas estrategias y particularidades de diseño, con sus resp
 
 **Canal 485**
     
-El estandar 485 maneja el bus de datos en un par de cables diferencial (A+ y B-). Todos los sensores se cuelgan en paralelo a este mismo bus y lo escuchan al mismo tiempo. Cada sensor se identifica y reconoce por su ID Header único, adoptado por el estándar de fabricante. 
+El estandar RS485 maneja el bus de datos en un par de cables diferencial (A+ y B-). Todos los sensores se cuelgan en paralelo a este mismo bus y lo escuchan al mismo tiempo. Cada sensor se identifica y reconoce por su ID Header único, adoptado por el estándar de fabricante. 
 
 Por ej: El ID de cabecera de trama para equipos que utilizan MODBUS RTU es un identificador de 1 byte, el cual puede asignarse a cada equipo por Dip-switches/selectores fisicos, pantalla-teclado integrados o por software del fabricante enviando un comando Modbus temporal al ID por defecto de fábrica (que suele ser el 1). Por otro lado, la trama de datos del OCR-507 de Satlantic se identifica por cadena ASCII "SAT", seguidas del tipo de sensor y luego del número de serie del equipo.  
 
