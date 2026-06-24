@@ -3,11 +3,10 @@
 
 **Contexto Rápido**
 >El Modulo Heltec Lora V4 está basado en el microcontrolador (uC) ESP32-S3R2, el cual a su vez le incorpora, entre otras cosas, un chip Semtech SX1262 para comunicaciones LoRa.
->El uC cuenta con un total de 36 pines físicos, de los cuales 28 de ellos son GPIOs. 
+>El Heltec cuenta con un total de 36 pines físicos expuestos, de los cuales 27 de ellos son GPIOs. 
 > * (x9) Pines de Alimentación - Control por Hardware (no programables): (x3) GND, (x1) 5V, (x2) 3,3v, (x2) Vext, (x1) RST.
-> * (x27) GPIO expuestos
-> *
-> * Un total de 10 de esos 27 GPIO ya están comprometidos a alguna tarea.
+
+> * Un total de 10 de esos 27 GPIO ya están comprometidos a alguna tarea, estos pines son "intocables" y no se reconmienda utilizarlos para otras funciones. 
 >   * GPIO 0: Botón PRG.
 >   * GPIO 1: Lectura de Batería.
 >   * GPIO 7: Amplificador de RF.
@@ -16,6 +15,8 @@
 >   * GPIO 36: VEXT
 >   * GPIO 37: Control Batería
 >   * GPIO 43 y 44: UART 0.
+
+> * Un total de 10 de esos 27 GPIO ya están comprometidos a alguna tarea, estos pines son "intocables" y no se reconmienda utilizarlos para otras funciones. 
     
 >Dado que el uC nativo cuenta con tecnología **IOMUX**, la mayoría de los periféricos internos (SPI, I2C, UART, PWM) pueden enrutarse 
 a cualquier GPIO libre. Se solicita asignar los pines óptimos según el layout del PCB, respetando las restricciones de los pines ya 
