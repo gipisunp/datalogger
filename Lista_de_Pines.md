@@ -73,8 +73,12 @@ La UART asociada a los canales 232 se conecta al módulo MIKROE, el mismo está 
 Tabla de Verdad para la selección de canales (A1 es la MSB) 
 
 **A1A0**
+
 00: Canal 0
+
 01: Canal 1
+
 10: Canal 2
+
 11: Canal 3
 
