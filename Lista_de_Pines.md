@@ -6,21 +6,21 @@
 >
 >El Heltec cuenta con un total 40 puntos de conexión, 36 pines físicos expuestos en sus dos tiras laterales, y 4 puntos soldables (GPIOs 15, 16 ,17 y 18) en su lateral inferior a la pantalla OLED.
 >
-> El total de GPIOs es de 32 (contando los puntos soldables), de los cuales 28 se encuentran en los laterales.
->
-> Algunos de estos 
-> * (x9) Pines de Alimentación - Control por Hardware (no programables): (x3) GND, (x1) 5V, (x2) 3,3v, (x2) Vext, (x1) RST.
+> El total de GPIO asignables es de 33 (contando los puntos soldables), de los cuales 29 se encuentran en los laterales. Los 7 restantes son pines de alimentación. 
 
-> * Un total de 10 de esos 27 GPIO ya están comprometidos a alguna tarea, estos pines son "intocables" y no se reconmienda utilizarlos para otras funciones. 
+> * Un total de 12 de esos 33 GPIO ya están comprometidos a alguna tarea, son "intocables", si se utilizan se corre el riesgo de dañar la placa o perder el control operativo.
+
+>   * GPIO 7: Front-End del Amplificador de RF.
+>   * GPIO 19 y 20: Línea de datos del USB.
+>   * GPIO 43 y 44: UART 0.
+
+no se reconmienda utilizarlos, otros pueden utilizarse para la tarea que cumplen o bien como GPIO prescindiendo de esta función. 
 >   * GPIO 0: Botón PRG.
 >   * GPIO 1: Lectura de Batería.
->   * GPIO 7: Amplificador de RF.
->   * GPIO 19 y 20: Línea de datos del USB.
+>   * GPIO 17 y 18: SDA y SCL pantala OLED.
 >   * GPIO 21: OLED RST
 >   * GPIO 36: VEXT
 >   * GPIO 37: Control Batería
->   * GPIO 43 y 44: UART 0.
-
 > Además, el
 > GPIO 35: Led de Usuario Blanco. 
 > GPIO 17, 18 y 21: Pantalla OLED.   
