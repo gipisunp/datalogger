@@ -1,0 +1,6 @@
+## Señal PPS del GPS 
+El RTC del uC luego de meses se va a desfasar. Si el GPS tiene salida PPS, puede utilizarse un GPIO adicional como interrupción para 
+leer esta señal y sincronizar el datalogger.
+
+##SD Card Detect 
+El sócalo de la SD trae un pin llamado Card Detect. Puede asignarsele un GPIO a este pin para detectar si la SD está insertada.
