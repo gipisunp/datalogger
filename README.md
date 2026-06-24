@@ -13,33 +13,8 @@
 # CANALES ANALOGICOS 
 Se manejan mediante el CI MCP3208. El mismo cuenta internamente con un multiplexor analógico y un ADC, los cuales se manejan mediante comandos SPI. 
 
-               DIAGRAMA DE BLOQUES INTERNO DEL MCP3208
-               =======================================
+# CANALES RS232
+Se manejan mediante el MIKROE MUX CLICK, modulo el cual permite convertir 4 señales RS232 en TTL/3.3V mediante la multiplexación por hardware.  
 
-               ┌────────────────────────────────────────┐
-               │         DIAGRAMA DE BLOQUES            │
-               │               MCP3208                  │
-               └────────────────────────────────────────┘
-
-    ENTRADAS ANALÓGICAS                                  SEÑALES SPI
-   ┌──────────────────┐                              ┌─────────────────┐
-   │ CH0 ────────┐    │                              │     ┌─────────┐ │
-   │ CH1 ──────┐ │    │    ┌────────────────┐        │ DIN ┤   REG.  ├─┼──> DIN
-   │ CH2 ────┐ │ │    │    │  SAMP / HOLD   │        │     │ CONTROL │ │
-   │ CH3 ──┐ │ │ │ ┌──┴────┴──┐        ┌────┴─────┐  │     └────┬────┘ │
-   │ CH4 ──┼─┼─┼─┼─┤ MULTIPLEXOR ├───────>┤   ADC    ├───┼──────────┼────┼──> DOUT
-   │ CH5 ──┼─┼─┼─┘ │  8 CANALES   │        │  12-BIT  │  │     ┌────┴────┐ │
-   │ CH6 ──┼─┼─┘   └──────────────┘        └────┬─────┘  │CLK ─┤ INTERFAZ├─┼──> CLK
-   │ CH7 ──┼─┘                                  ^        │     │   SPI   │ │
-   └───────┼────────────────────────────────────┼────────┤CS ──┤         ├─┼──> CS/SHDN
-           │                                    │        │     └─────────┘ │
-           └────────────────────────────────────┼────────┴─────────────────┘
-                                                │
-                                                ├──> VREF (Referencia)
-                                                ├──> VDD / DGND (Digital VCC/GND)
-                                                └──> AGND (Analógico GND)
-
-
-
-
-
+# CANALES RS485
+Se manejan mediante un módulo conversor RS485 a TTL/3.3V. No requiere multiplexación, sino una lógica de reconocimiento y consulta por ID específicos asignados a cada sensor.   
