@@ -50,17 +50,31 @@ En ultima instancia, estos pines RE/DE suelen puentearse externamente a un solo 
 
 Dicho todo esto, el bus de datos A+/B- con los equipos RS485 se conectar a la bornera de entrada del modulo conversor, del cual salen las lineas TX y RX listas para conectar al uC Heltec. 
 
-> 1. TX: Transmición de datos. 
-> 2. RX: Recepción de datos.
-> 3. RE/DE: OPCIONAL. Línea de control de bus, si bien son dos pines físicos que salen del modulo conversor, gasta solo 1 pin pq están puenteados al uC.
+> 1. TX: Transmición de datos. Se conecta luego a RX de la UART del uC.
+> 2. RX: Recepción de datos. Se conecta luego a TX de la UART del uC.
+> 3. RE/DE: OPCIONAL. Línea de control de bus, si bien son dos pines físicos que salen del modulo conversor, gasta solo 1 pin ya que la práctica estándar y más habitual para trabajar en modo Half-Duplex es puentear los pines RE (Receiver Enable, activo bajo) y DE (Driver Enable, activo alto).
 
-  * Con Módulo Reciente: **2 pines**.
-  * Con Módulo Anterior: **3 pines**.
+  * Con Módulo Reciente (sin RE/DE): **2 pines**.
+  * Con Módulo Anterior (con RE/DE): **3 pines**.
 
 **No se recomienda un modulo basado en el chip MAX485 ni el SN75176** ya que este no están pensados para manejar tensiones 3,3V sino de 5V. 
 
 
 **Canal 232**
+La UART asociada a los canales 232 se conecta al módulo MIKROE, el mismo está preparado para convertir señales RS232 en lógica TTL 3,3V y a su vez permite multiplexar 4 sensores, mediando la selección de A0 y A1. 
+
+> * A0: Selección LSB.
+> * A1: Selección MSB.
+> * TX módulo: Se conecta al RX de la UART instanciada para canales 232.
+> * RX módulo: Se conecta al TX de la UART instanciada para canales 232.
+
   * Compartido: **4 pines**.
 
+Tabla de Verdad para la selección de canales (A1 es la MSB) 
+
+**A1A0**
+00: Canal 0
+01: Canal 1
+10: Canal 2
+11: Canal 3
 
