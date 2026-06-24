@@ -47,7 +47,7 @@ Algunos GPIO pueden utilizarse alternativamente como canales ADC, pulsador TOUCH
 
 ## **PUERTOS A OCUPAR POR EL DATALOGGER**
 
-Preliminarmente, se establece la necesidad de **15 pines GPIO** disponibles para las distintas funciones, las cuales se detallan a continuación: 
+Preliminarmente, se establece la necesidad de entre **17 y 21 pines GPIO** disponibles para las distintas funciones según la arquitectura y la disponibilidad de hardware, las cuales se detallan a continuación: 
 
 ### **Canal Analog - SPI**
 
@@ -114,6 +114,8 @@ No puede implementarse más de 4 sensores 232 con esta arquitectura, ya que solo
 
 * UART-232: **4 pines**.
 
+El datalogger deberá seleccionar el sensor que quiere consultar activando las lineas A1A0 correspondientes, esta lógica debería ser semejante a una maquina de estados que completa un ciclo de muestreo 232. Es decir, inicializando A1A0=00 y esperando que el sensor en el Canal 0 aporte su trama de datos, una vez recibida y decodificada esta trama se cambia A1A0=10 y se consulta el siguiente Canal, y así hasta completar el ciclo. La lógica de energización de sensores sincronizada con las A0A1 es crucial.  
+
 Tabla de Verdad para la selección de canales (A1 es la MSB): 
 
 **A1A0**
@@ -137,7 +139,11 @@ En principio utilizaría los pines clasicos del I2C:
 
 Tener en cuenta que este protocolo utiliza resistencias de pull-up debidamente dimensionadas. La arquitectura y uso final de este Canal siguen pendientes de definición. 
 
+Los buses I2C no están diseñados para equipos industriales/oceanográficos sino para perifericos de corto alcance. 
+
 ### **GPIOs PARA CONTROL DE ENERGÍA Y ACTUADORES**
+
+Los relay se activan con lógica activa baja, es decir se pone a "0" el GPIO asignado para energízar BIOSHUTTER/BOMBA.
 
 > ACTIVATE SENSORS: Despertar equipos para ahorrar energía de sensores, lógica gobernada por el uC semejante a lo ya implementado por EMAC utilizando un MOSFET IRF9540.
 > 
@@ -145,6 +151,6 @@ Tener en cuenta que este protocolo utiliza resistencias de pull-up debidamente d
 > 
 > RELAY PARA ACCIONAR BOMBA.
 > 
-> CONTROL DE BALIZA TIDELAN.
+> CONTROL DE BALIZA TIDELAND.
 
 * ENERGÍA Y ACTUADORES: **4 pines**.
