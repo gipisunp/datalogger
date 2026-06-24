@@ -7,7 +7,7 @@ El Heltec cuenta con un total 40 puntos de conexión, 36 pines físicos expuesto
 
 El total de GPIO asignables es de 32 (contando los puntos soldables), de los cuales 28 se encuentran en los laterales. Los 8 restantes son 1 pin de Reset (pin físico 7) y 7 pines de alimentación (x2) GND, (x2) 3.3V_IN, (x1) 5V_IN, (x2) 3.3V_OUT . 
 
-Un total de 14 de esos 32 GPIO ya están comprometidos a alguna tarea, el cual podemos clasificarlos en 6 "*Intocables*", 6 "*Sacrificables*" y 2 en "*Zona Gris*".
+Un total de 20 de esos 32 GPIO ya están comprometidos a alguna tarea, el cual podemos clasificarlos en 6 "*Intocables*", 12 "*Sacrificables*" y 2 en "*Zona Gris*".
 
 Los pines *intocables* si se utilizan cómo GPIO se corre el riesgo de dañar la placa o perder el control operativo. Estos son:
 
@@ -21,6 +21,7 @@ Los GPIO clasificados de manera "sacrificable" se utilizan como tal prescindiend
 >   * GPIO 0: Botón PRG.
 >   * GPIO 17 y 18: SDA y SCL pantala OLED.
 >   * GPIO 21: OLED RST.
+>   * GPIO 34, 38, 39, 40, 41 y 42: Interfaz GNSS, routeados directamente al conector SH1.25-8P de la parte de atrás.
 >   * GPIO 35: LED BLANCO Testigo (Este está bueno pq si se coloca por ejemplo la linea MOSI de la SD, cada vez que se guarde un dato en la SD se va a encender el led. U otro ejemplo, si se conecta al relay que acciona el BIOSHUTTER, cada vez que se abra se va a encender este led. En ultima instancia, puede usarse para cualquier cosa y que quede el led encendiendose sin sentido, aunque estaría bueno el darselo). 
 >   * GPIO 36: VEXT.
 
