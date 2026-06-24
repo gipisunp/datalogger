@@ -1,17 +1,30 @@
 # **LISTA DE PINES**
 >Datalogger GIPIS (HELTEC ESP32 LORA V4).
 
-Dado que el ESP32-S3 cuenta con tecnología **IOMUX**, la mayoría de los periféricos internos (SPI, I2C, UART, PWM) pueden enrutarse 
+**Contexto Rápido**
+>El Modulo Heltec Lora V4 está basado en el microcontrolador (uC) ESP32-S3R2, el cual a su vez le incorpora, entre otras cosas, un chip Semtech SX1262 para comunicaciones LoRa.
+>El uC cuenta con un total de 36 pines físicos, de los cuales 28 de ellos son GPIOs. 
+> * (x9) Pines de Alimentación - Control por Hardware (no programables): (x3) GND, (x1) 5V, (x2) 3,3v, (x2) Vext, (x1) RST.
+> * (x27) GPIO expuestos
+> *
+> * Un total de 10 de esos 27 GPIO ya están comprometidos a alguna tarea.
+>   * GPIO 0: Botón PRG.
+>   * GPIO 1: Lectura de Batería.
+>   * GPIO 7: Amplificador de RF.
+>   * GPIO 19 y 20: Línea de datos del USB.
+>   * GPIO 21: OLED RST
+>   * GPIO 36: VEXT
+>   * GPIO 37: Control Batería
+>   * GPIO 43 y 44: UART 0.
+    
+>Dado que el uC nativo cuenta con tecnología **IOMUX**, la mayoría de los periféricos internos (SPI, I2C, UART, PWM) pueden enrutarse 
 a cualquier GPIO libre. Se solicita asignar los pines óptimos según el layout del PCB, respetando las restricciones de los pines ya 
 utilizados internamente por la placa Heltec.
-
-**Contexto Rápido**
->aaaa
 
 
 Preliminarmente, se establece la necesidad de **15 pines GPIO** disponibles para las distintas funciones, las cuales se detallan a continuación: 
 
-**Canal Analog - SPI**
+a) **Canal Analog - SPI**
 
 Según la estrategia de diseño, la tarjeta SD y los canales analógicos, gobernados por el chip MCP3208, pueden compartir o no el mismo bus
 SPI. Esto trae distintas estrategias y particularidades de diseño, con sus respectivas ventajas y desventajas. 
@@ -32,7 +45,7 @@ SPI. Esto trae distintas estrategias y particularidades de diseño, con sus resp
     * **Ventajas**: Aislamiento del MCP frente al ruido de línea de que puedan generar los picos de consumo de la SD. 
     * **Desventajas**: Mayor consumo de pines. 
 
-**Canal 485**
+b) **Canal 485**
     
 El estandar RS485 maneja el bus de datos en un par de cables diferencial (A+ y B-). Todos los sensores se cuelgan en paralelo a este mismo bus y lo escuchan al mismo tiempo. Cada sensor se identifica y reconoce por su ID Header único, adoptado por el estándar de fabricante. 
 
@@ -60,7 +73,7 @@ Dicho todo esto, el bus de datos A+/B- con los equipos RS485 se conectar a la bo
 **No se recomienda un modulo basado en el chip MAX485 ni el SN75176** ya que este no están pensados para manejar tensiones 3,3V sino de 5V. 
 
 
-**Canal 232**
+c) **Canal 232**
 La UART asociada a los canales 232 se conecta al módulo MIKROE, el mismo está preparado para convertir señales RS232 en lógica TTL 3,3V y a su vez permite multiplexar 4 sensores, mediando la selección de A0 y A1. 
 
 > * A0: Selección LSB.
@@ -82,3 +95,4 @@ Tabla de Verdad para la selección de canales (A1 es la MSB)
 
 11: Canal 3
 
+d) 
