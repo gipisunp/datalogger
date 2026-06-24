@@ -1,34 +1,51 @@
 # **LISTA DE PINES**
->Datalogger GIPIS (HELTEC ESP32 LORA V4).
+Datalogger GIPIS utilizará un modulo Heltec Lora V4 basado en el microcontrolador (uC) ESP32-S3R2, el cual a su vez le incorpora, entre otras cosas, un chip Semtech SX1262 para comunicaciones LoRa.
 
-**Contexto Rápido**
->El Modulo Heltec Lora V4 está basado en el microcontrolador (uC) ESP32-S3R2, el cual a su vez le incorpora, entre otras cosas, un chip Semtech SX1262 para comunicaciones LoRa.
->
->El Heltec cuenta con un total 40 puntos de conexión, 36 pines físicos expuestos en sus dos tiras laterales, y 4 puntos soldables (GPIOs 15, 16 ,17 y 18) en su lateral inferior a la pantalla OLED.
->
-> El total de GPIO asignables es de 33 (contando los puntos soldables), de los cuales 29 se encuentran en los laterales. Los 7 restantes son pines de alimentación. 
+## **DESCRIPCIÓN DE PINES HELTEC**
 
-> * Un total de 12 de esos 33 GPIO ya están comprometidos a alguna tarea, son "intocables", si se utilizan se corre el riesgo de dañar la placa o perder el control operativo.
+El Heltec cuenta con un total 40 puntos de conexión, 36 pines físicos expuestos en sus dos tiras laterales, y 4 puntos soldables (GPIOs 15, 16 ,17 y 18) en su lateral inferior a la pantalla OLED.
+
+El total de GPIO asignables es de 32 (contando los puntos soldables), de los cuales 28 se encuentran en los laterales. Los 8 restantes son 1 pin de Reset (pin físico 7) y 7 pines de alimentación (x2) GND, (x2) 3.3V_IN, (x1) 5V_IN, (x2) 3.3V_OUT . 
+
+Un total de 14 de esos 32 GPIO ya están comprometidos a alguna tarea, el cual podemos clasificarlos en 6 "*Intocables*", 6 "*Sacrificables*" y 2 en "*Zona Gris*".
+
+Los pines *intocables* si se utilizan cómo GPIO se corre el riesgo de dañar la placa o perder el control operativo. Estos son:
 
 >   * GPIO 7: Front-End del Amplificador de RF.
 >   * GPIO 19 y 20: Línea de datos del USB.
 >   * GPIO 43 y 44: UART 0.
+>   * GPIO 46: Habilitador del AMP.RF. 
 
-no se reconmienda utilizarlos, otros pueden utilizarse para la tarea que cumplen o bien como GPIO prescindiendo de esta función. 
+Los GPIO clasificados de manera "sacrificable" se utilizan como tal prescindiendo de la tarea que cumplen según como están físicamente routeados: 
+
 >   * GPIO 0: Botón PRG.
->   * GPIO 1: Lectura de Batería.
 >   * GPIO 17 y 18: SDA y SCL pantala OLED.
->   * GPIO 21: OLED RST
->   * GPIO 36: VEXT
->   * GPIO 37: Control Batería
-> Además, el
-> GPIO 35: Led de Usuario Blanco. 
-> GPIO 17, 18 y 21: Pantalla OLED.   
-    
->Dado que el uC nativo cuenta con tecnología **IOMUX**, la mayoría de los periféricos internos (SPI, I2C, UART, PWM) pueden enrutarse 
-a cualquier GPIO libre. Se solicita asignar los pines óptimos según el layout del PCB, respetando las restricciones de los pines ya 
-utilizados internamente por la placa Heltec.
+>   * GPIO 21: OLED RST.
+>   * GPIO 35: LED BLANCO Testigo (Este está bueno pq si se coloca por ejemplo la linea MOSI de la SD, cada vez que se guarde un dato en la SD se va a encender el led. U otro ejemplo, si se conecta al relay que acciona el BIOSHUTTER, cada vez que se abra se va a encender este led. En ultima instancia, puede usarse para cualquier cosa y que quede el led encendiendose sin sentido, aunque estaría bueno el darselo). 
+>   * GPIO 36: VEXT.
 
+
+Finalmente, los que están en una zona "gris", es decir usables pero con cuidado, mejor evitarlos.
+>   * GPIO 1: Lectura de Batería.
+>   * GPIO 37: Control Batería
+
+> El Heltec trae un divisor resistivo soldado internamente para medir el voltaje de la batería LiPo, el GPIO 37 enciende ese circuito y el GPIO 1 lee el voltaje analógico. El problema de usarlos para otra cosa, como un bus de datos, es que las resistencias físicas de ese divisor siguen soldadas ahí, lo que introduce impedancia no deseada.
+  
+    
+Dado que el uC nativo cuenta con tecnología **IOMUX**, la mayoría de los periféricos internos (SPI, I2C, UART, PWM) pueden enrutarse 
+a cualquier GPIO libre.  
+
+Algunos GPIO pueden utilizarse alternativamente como canales ADC, pulsador TOUCH, o reloj de salida. **Consultar pines intocables y grises antes de utilizarlos**. 
+
+**EN RESUMEN** 
+>    * 32 GPIOs
+>         * 18 GPIO Completamente Libres (Algunas pueden alternativamente ser ADC, CLK, TOUCH..).
+>         * 14 GPIO Condicionadas
+>             * 6 GPIO Intocables
+>             * 6 GPIO Sacrificables
+>             * 2 GPIO en Zona Gris. 
+
+## **GPIOs NECESARIOS**
 
 Preliminarmente, se establece la necesidad de **15 pines GPIO** disponibles para las distintas funciones, las cuales se detallan a continuación: 
 
