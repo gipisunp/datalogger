@@ -45,14 +45,13 @@ Algunos GPIO pueden utilizarse alternativamente como canales ADC, pulsador TOUCH
 >             * 6 GPIO Sacrificables
 >             * 2 GPIO en Zona Gris. 
 
-## **GPIOs NECESARIOS**
+## **PUERTOS A OCUPAR POR EL DATALOGGER**
 
 Preliminarmente, se establece la necesidad de **15 pines GPIO** disponibles para las distintas funciones, las cuales se detallan a continuación: 
 
-a) **Canal Analog - SPI**
+### **Canal Analog - SPI**
 
-Según la estrategia de diseño, la tarjeta SD y los canales analógicos, gobernados por el chip MCP3208, pueden compartir o no el mismo bus
-SPI. Esto trae distintas estrategias y particularidades de diseño, con sus respectivas ventajas y desventajas. 
+Los Pines necesarios son:
 
 > 1. MOSI: Envio de datos. Master-to-Slave. "TX del Heltec". 
 > 2. MISO: Recepción de datos. Slave-to-Master. "RX del Heltec".
@@ -62,15 +61,20 @@ SPI. Esto trae distintas estrategias y particularidades de diseño, con sus resp
 > 4. CS_MCP3208: Enciende el MCP.
 > 5. CS_SD: Enciende la SD. 
 
-  * Compartido: **5 pines**.
-     * **Ventajas**: Menor consumo de pines. Menor número de pistas de alta velocidad ("antenas" en el PCB). 
-    * **Desventajas**: Gestión de Reloj, las distintas clases deberán reconfigurar el baudrate dinámicamente según si es MCP o SD. Riesgo de Solapamiento, algunas SD no liberan la linea MISO al desactivar su CS (por error de diseño, al conectar permanentemente el pin de habilitación de salida OE a GND, o por exigencia del estandar SD/MMC al trabajar en 3,3V sin módulos intermedios, el cual exige un pulso de reloj extra (byte 0xFF) para entrar en estado de alta impedancia y liberar la línea.
-      * NOTA: La arquitectura antigua de EMAC realizaba esta mala práctica de re-instanciar el bus SPI completo en cada lectura analógica (read_adc()), lo que consume recursos y tiempo.
-  * Separado: **8 pines**.
-    * **Ventajas**: Aislamiento del MCP frente al ruido de línea de que puedan generar los picos de consumo de la SD. 
-    * **Desventajas**: Mayor consumo de pines. 
+Según la estrategia de diseño, la tarjeta SD y los canales analógicos (gobernados por el chip MCP3208) pueden compartir o no el mismo bus
+SPI. Esto trae distintas estrategias y particularidades de diseño, con sus respectivas ventajas y desventajas. 
 
-b) **Canal 485**
+* Compartido: **5 pines**.
+>    * **Ventajas**: Menor consumo de pines. Menor número de pistas de alta velocidad ("antenas" en el PCB). 
+>    * **Desventajas**: Gestión de Reloj, las distintas clases deberán reconfigurar el baudrate dinámicamente según si es MCP o SD. Riesgo de Solapamiento, algunas SD no liberan la linea MISO al desactivar su CS (por error de diseño, al conectar permanentemente el pin de habilitación de salida OE a GND, o por exigencia del estandar SD/MMC al trabajar en 3,3V sin módulos intermedios, el cual exige un pulso de reloj extra (byte 0xFF) para entrar en estado de alta impedancia y liberar la línea).
+
+* Separado: **8 pines**.
+>    * **Ventajas**: Aislamiento del MCP frente al ruido de línea de que puedan generar los picos de consumo de la SD. 
+>    * **Desventajas**: Mayor consumo de pines. 
+
+**NOTA**: La arquitectura antigua de EMAC realizaba esta mala práctica de re-instanciar el bus SPI completo en cada lectura analógica (read_adc()), lo que consume recursos y tiempo.
+
+### **Canal 485**
     
 El estandar RS485 maneja el bus de datos en un par de cables diferencial (A+ y B-). Todos los sensores se cuelgan en paralelo a este mismo bus y lo escuchan al mismo tiempo. Cada sensor se identifica y reconoce por su ID Header único, adoptado por el estándar de fabricante. 
 
@@ -82,11 +86,11 @@ Si se detecta SAT -> OCR y luego yendo a buscar el serial sabemos si es el de ra
 
 Para poder integrar un sensor que maneja RS485 a un uC de 3,3V se requiere de un hardware conversor intermedio. El modulo conversor debe manejar el chip **MAX3485** (limitando la red a un máximo de 32 dispositivos, max 10Mbps), o bien el chip **MAX13487** (Posee una impedancia de entrada de 1/4 de unidad, lo que permite conectar hasta 128 dispositivos en el mismo bus, hasta 500kbps) o **MAX13488** (misma capacidad de dispositivos, velocidad de hasta 16Mbps).
 
-El 3485 requiere nativamente de pinesde control RE/DE adicionales, los cuales le permiten al master tomar o ceder el control del bus, mientras que los 1348x lo resuelven nativamente sin necesidad de estos pines. Sin embargo, algunos modulos basados en 3485 lo solucionan con hardware adicional externo, es decir que algunos modulos que SI ESTAN BASADOS EN MAX3485 pueden no requerir las lineas de pines adicionales, requiriendo solamente de las lineas de datos.  
+El 3485 requiere nativamente de pines de control RE/DE adicionales, los cuales le permiten al master tomar o ceder el control del bus, mientras que los 1348x lo resuelven nativamente sin necesidad de estos pines. Sin embargo, algunos modulos basados en 3485 lo solucionan con hardware adicional externo, es decir que algunos modulos que SI ESTAN BASADOS EN MAX3485 pueden no requerir las lineas de pines adicionales, requiriendo solamente de las lineas de datos.  
 
-En ultima instancia, estos pines RE/DE suelen puentearse externamente a un solo GPIO del uC. Por ejemplo si el uC pone en alto su GPIO tanto RE como DE se ponene en alto y el datalogger toma control del bus, y viceversa para un bajo en el GPIO.  
+En ultima instancia, estos pines RE/DE suelen puentearse externamente a un solo GPIO del uC, ya que uno es activo bajo y el otro activo alto. 
 
-Dicho todo esto, el bus de datos A+/B- con los equipos RS485 se conectar a la bornera de entrada del modulo conversor, del cual salen las lineas TX y RX listas para conectar al uC Heltec. 
+Dicho todo esto, los equipos RS485 se van a físicamente a la línea de datos A+/B- ingresantes al módulo conversor MAX, de este ultimo salen TX y RX convertidas y listas para conectar a la UART del uC Heltec. 
 
 > 1. TX: Transmición de datos. Se conecta luego a RX de la UART del uC.
 > 2. RX: Recepción de datos. Se conecta luego a TX de la UART del uC.
@@ -95,29 +99,52 @@ Dicho todo esto, el bus de datos A+/B- con los equipos RS485 se conectar a la bo
   * Con Módulo Reciente (sin RE/DE): **2 pines**.
   * Con Módulo Anterior (con RE/DE): **3 pines**.
 
-**No se recomienda un modulo basado en el chip MAX485 ni el SN75176** ya que este no están pensados para manejar tensiones 3,3V sino de 5V. 
+**No se recomienda un modulo basado en el chip MAX485 ni el SN75176** ya que no están pensados para manejar tensiones 3,3V sino de 5V. 
 
 
-c) **Canal 232**
+### **Canal 232**
 La UART asociada a los canales 232 se conecta al módulo MIKROE, el mismo está preparado para convertir señales RS232 en lógica TTL 3,3V y a su vez permite multiplexar 4 sensores, mediando la selección de A0 y A1. 
+
+No puede implementarse más de 4 sensores 232 con esta arquitectura, ya que solo tenemos una única UART disponible para este fin, salvo de conseguir un MUX que sea de 8 canales en lugar del de 4 canales actual. Se recomienda colocar en esta UART-232 aquellos sensores que únicamente utilicen este protocolo, delegando el resto a canales analógicos o 485.
 
 > * A0: Selección LSB.
 > * A1: Selección MSB.
 > * TX módulo: Se conecta al RX de la UART instanciada para canales 232.
 > * RX módulo: Se conecta al TX de la UART instanciada para canales 232.
 
-  * Compartido: **4 pines**.
+* UART-232: **4 pines**.
 
-Tabla de Verdad para la selección de canales (A1 es la MSB) 
+Tabla de Verdad para la selección de canales (A1 es la MSB): 
 
 **A1A0**
 
-00: Canal 0
+>00: Canal 0
+>
+>01: Canal 1
+>
+>10: Canal 2
+>
+>11: Canal 3
 
-01: Canal 1
+### **CANAL I2C**
+En principio utilizaría los pines clasicos del I2C:
 
-10: Canal 2
+> SDA: Línea de Datos.
+> 
+> SCL: Reloj.
 
-11: Canal 3
+* I2C: **2 pines**.
 
-d) 
+Tener en cuenta que este protocolo utiliza resistencias de pull-up debidamente dimensionadas. La arquitectura y uso final de este Canal siguen pendientes de definición. 
+
+### **GPIOs PARA CONTROL DE ENERGÍA Y ACTUADORES**
+
+> ACTIVATE SENSORS: Despertar equipos para ahorrar energía de sensores, lógica gobernada por el uC semejante a lo ya implementado por EMAC utilizando un MOSFET IRF9540.
+> 
+> RELAY PARA ACCIONAR BIOSHUTTER.
+> 
+> RELAY PARA ACCIONAR BOMBA.
+> 
+> CONTROL DE BALIZA TIDELAN.
+
+* ENERGÍA Y ACTUADORES: **4 pines**.
