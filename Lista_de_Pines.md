@@ -40,10 +40,10 @@ Algunos GPIO pueden utilizarse alternativamente como canales ADC, pulsador TOUCH
 
 **EN RESUMEN** 
 >    * 32 GPIOs
->         * 18 GPIO Completamente Libres (Algunas pueden alternativamente ser ADC, CLK, TOUCH..).
->         * 14 GPIO Condicionadas
+>         * 12 GPIO Completamente Libres (Algunas pueden alternativamente ser ADC, CLK, TOUCH..).
+>         * 20 GPIO Condicionadas
 >             * 6 GPIO Intocables
->             * 6 GPIO Sacrificables
+>             * 12 GPIO Sacrificables
 >             * 2 GPIO en Zona Gris. 
 
 ## **PUERTOS A OCUPAR POR EL DATALOGGER**
@@ -114,6 +114,8 @@ No puede implementarse más de 4 sensores 232 con esta arquitectura, ya que solo
 > * RX módulo: Se conecta al TX de la UART instanciada para canales 232.
 
 * UART-232: **4 pines**.
+
+Adicionalmente, el módulo MIKROE trae pines ON y OFF. Estos van a VCC (o a ACTIVATE SENSORS) y a GND respectivamente sin gastar GPIOs.
 
 El datalogger deberá seleccionar el sensor que quiere consultar activando las lineas A1A0 correspondientes, esta lógica debería ser semejante a una maquina de estados que completa un ciclo de muestreo 232. Es decir, inicializando A1A0=00 y esperando que el sensor en el Canal 0 aporte su trama de datos, una vez recibida y decodificada esta trama se cambia A1A0=10 y se consulta el siguiente Canal, y así hasta completar el ciclo. La lógica de energización de sensores sincronizada con las A0A1 es crucial.  
 
