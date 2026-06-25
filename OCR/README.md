@@ -83,7 +83,7 @@ Consumo total de operación constante (sin transitorios):
 ## TRANSITORIOS 
 
 **Iniciar HELTEC**
-200ms de despierte . 50mA a 50V 
+200ms de despierte . 50mA a 5V 
 
         Consumo_Inicio = 5 V * 50 mA * 0.2 s / 3600 / 0.92 =  15 uWh 
         
@@ -122,7 +122,7 @@ Para el inclinómetro, tenemos la aceleración en los 3 ejes y el magnetómetro 
 
         PAYLOAD_INCL = 6 ejes * 2 bytes = 12 bytes. 
 
-Teniendo en cuenta el protocolo para la trama completa LoRa, estimamos una trama de datos en:
+Teniendo en cuenta el protocolo para la trama completa LoRa, le sumamos 13 bytes adicionales de Header y control de errores, estimamos una trama de datos en:
 
         **PAYLOAD = 53 bytes** 
 
@@ -152,11 +152,13 @@ Si el ciclo cambiase, este consumo debe recalcularse. Por ejemplo apertura de BI
 
 
 ## CONSUMO EN UN DÍA DE MUESTREO 
-Como el OCR solo mide de día, toda la noche hay consumo de reposo.
+Como el OCR solo mide de día, toda la noche hay consumo de reposo. Esto queda implicito en t_uso. 
 
 
-        t_uso = n_mediciones_diarias * 4,442 s
+        t_uso = n_mediciones_diarias * 4.442 s
 
         Consumo_Total_Día_Muestreo = (24 hs - t_uso_horas) * P_Reposo + n_mediciones_diarias * Consumo_Total_Muestreo
 
-        Consumo_Total_Día_Muestreo = (24 hs - t_uso) * 6 mW + n_mediciones_diarias * 12.40 mWh
+        Consumo_Total_Día_Muestreo = (24 hs - t_uso_horas) * 6 mW + n_mediciones_diarias * 20.62 mWh
+
+**NOTA**: Si, por alguna razón mecánica, el BioShutter no cerrara bien o el relay quedara pegado (por un fallo en el optoacoplador o un error de código), el sistema pasaría de consumir 6 mW en reposo a 1.57W constantes.
