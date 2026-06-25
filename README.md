@@ -18,3 +18,7 @@ Se manejan mediante el MIKROE MUX CLICK, modulo el cual permite convertir 4 señ
 
 # CANALES RS485
 Se manejan mediante un módulo conversor RS485 a TTL/3.3V. No requiere multiplexación, sino una lógica de reconocimiento y consulta por ID específicos asignados a cada sensor.   
+
+# CANAL I2C
+
+Inclinómetro GY-511 LSM303DLHC. 
